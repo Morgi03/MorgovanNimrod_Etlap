@@ -3,6 +3,7 @@ package hu.petrik.etlapprojekt.etlap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class EtlapController {
 
@@ -28,6 +29,14 @@ public class EtlapController {
     private Button forintEmelesButton;
     @FXML
     private TableColumn<Etel, Integer> priceCol;
+
+    public void initialize() {
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        szazalekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
+        forintSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2500));
+    }
 
     @FXML
     public void ujEtelFelveteleClick(ActionEvent actionEvent) {
