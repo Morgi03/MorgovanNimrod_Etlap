@@ -21,6 +21,13 @@ public class Etel {
         this.desc = desc;
     }
 
+    public Etel(String name, String category, int price, String desc) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.desc = desc;
+    }
+
     public String getName() {
         return name;
     }
