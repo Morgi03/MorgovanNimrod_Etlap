@@ -1,14 +1,24 @@
 package hu.petrik.etlapprojekt.etlap;
 
 public class Etel {
+    private int id;
     private String name;
     private String category;
     private int price;
+    private String desc;
 
     public Etel(String name, String category, int price) {
         this.name = name;
         this.category = category;
         this.price = price;
+    }
+
+    public Etel(int id, String name, String category, int price, String desc) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.desc = desc;
     }
 
     public String getName() {
@@ -33,5 +43,21 @@ public class Etel {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

@@ -1,9 +1,14 @@
 package hu.petrik.etlapprojekt.etlap;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 public class EtlapController {
 
@@ -29,6 +34,7 @@ public class EtlapController {
     private Button forintEmelesButton;
     @FXML
     private TableColumn<Etel, Integer> priceCol;
+    private EtlapDB db;
 
     public void initialize() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -36,8 +42,22 @@ public class EtlapController {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         szazalekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
         forintSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2500));
+        try {
+            db = new EtlapDB();
+            readFood();
+        } catch (SQLException e) {
+            Platform.runLater(() -> {
+                sqlAlert(e);
+                Platform.exit();
+            });
+        }
     }
 
+    private void readFood() throws SQLException {
+        List<Etel> dogs = db.readFood();
+        etlapTable.getItems().clear();
+        etlapTable.getItems().addAll(dogs);
+    }
     @FXML
     public void ujEtelFelveteleClick(ActionEvent actionEvent) {
     }
@@ -52,5 +72,18 @@ public class EtlapController {
 
     @FXML
     public void szazalekEmelesClick(ActionEvent actionEvent) {
+    }
+
+
+
+
+    private Optional<ButtonType> alert(Alert.AlertType alertType, String headerText, String conentText) {
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(headerText);
+        alert.setContentText(conentText);
+        return alert.showAndWait();
+    }
+    private void sqlAlert(SQLException e) {
+        alert(Alert.AlertType.ERROR, "Hiba történt az adatbázis kapcsolat kialakításakor", e.getMessage());
     }
 }
