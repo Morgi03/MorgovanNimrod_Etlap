@@ -3,9 +3,13 @@ package hu.petrik.etlapprojekt.etlap;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -58,8 +62,34 @@ public class EtlapController {
         etlapTable.getItems().clear();
         etlapTable.getItems().addAll(dogs);
     }
+
     @FXML
     public void ujEtelFelveteleClick(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("etel-form.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 320, 350);
+            Stage stage = new Stage();
+            stage.setTitle("Make Food");
+            stage.setScene(scene);
+            stage.show();
+            ujEtelFelveteleButton.setDisable(true);
+            torlesButton.setDisable(true);
+            forintEmelesButton.setDisable(true);
+            szazalekEmelesButton.setDisable(true);
+            stage.setOnCloseRequest(event -> {
+                ujEtelFelveteleButton.setDisable(false);
+                torlesButton.setDisable(false);
+                forintEmelesButton.setDisable(false);
+                szazalekEmelesButton.setDisable(false);
+                try {
+                    readFood();
+                } catch (SQLException e) {
+                    sqlAlert(e);
+                }
+            });
+        } catch (Exception e) {
+            alert(Alert.AlertType.ERROR, "HIBA", e.getMessage());
+        }
     }
 
     @FXML
@@ -75,14 +105,13 @@ public class EtlapController {
     }
 
 
-
-
     private Optional<ButtonType> alert(Alert.AlertType alertType, String headerText, String conentText) {
         Alert alert = new Alert(alertType);
         alert.setHeaderText(headerText);
         alert.setContentText(conentText);
         return alert.showAndWait();
     }
+
     private void sqlAlert(SQLException e) {
         alert(Alert.AlertType.ERROR, "Hiba történt az adatbázis kapcsolat kialakításakor", e.getMessage());
     }

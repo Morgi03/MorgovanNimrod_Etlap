@@ -36,4 +36,14 @@ public class EtlapDB {
         return foods;
     }
 
+    public boolean createFood(Etel food) throws SQLException {
+        String sql = "INSERT INTO etlap(nev, leiras, ar, kategoria) VALUES (?,?,?,?)";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, food.getName());
+        stmt.setString(2, food.getDesc());
+        stmt.setInt(3, food.getPrice());
+        stmt.setString(4, food.getCategory());
+        return stmt.executeUpdate() > 0;
+    }
+
 }
