@@ -1,6 +1,9 @@
 package hu.petrik.etlapprojekt.etlap;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +43,10 @@ public class EtlapController {
     private TableColumn<Etel, Integer> priceCol;
     private EtlapDB db;
 
+    public void running() {
+
+    }
+
     public void initialize() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
@@ -55,12 +62,35 @@ public class EtlapController {
                 Platform.exit();
             });
         }
+
+        etlapTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                if (etlapTable.getSelectionModel().getSelectedItem() != null) {
+                    Etel food = getSelectedFood();
+                    listview.getItems().clear();
+                    listview.getItems().add(food != null ? food.getDesc() : "");
+                }
+            }
+        });
+
+
     }
 
     private void readFood() throws SQLException {
         List<Etel> dogs = db.readFood();
         etlapTable.getItems().clear();
         etlapTable.getItems().addAll(dogs);
+    }
+
+
+    private Etel getSelectedFood() {
+        int selectedIndex = etlapTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == -1) {
+            alert(Alert.AlertType.WARNING, "A táblázatból előbb válasszon ki egy ételt!", "");
+            return null;
+        }
+        return etlapTable.getSelectionModel().getSelectedItem();
     }
 
     @FXML

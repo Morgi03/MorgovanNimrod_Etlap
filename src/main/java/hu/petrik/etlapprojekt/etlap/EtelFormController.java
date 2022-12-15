@@ -42,11 +42,6 @@ public class EtelFormController {
             alert(Alert.AlertType.WARNING, "A név megadása kötelező", "");
             return;
         }
-        if (desc.isEmpty()) {
-            alert(Alert.AlertType.WARNING, "A leírás megadása kötelező", "");
-            return;
-        }
-        //TODO: adat felvétele az adatbázisba
         Etel food = new Etel(name, category, price, desc);
         try {
             if (db.createFood(food)) {
