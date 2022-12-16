@@ -124,6 +124,22 @@ public class EtlapController {
 
     @FXML
     public void torlesClick(ActionEvent actionEvent) {
+        Etel selected = getSelectedFood();
+        if (selected == null) return;
+        Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy törölni szeretné a kiválasztott ételt?", "");
+        if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
+            return;
+        }
+        try {
+            if (db.deleteFood(selected.getId())) {
+                alert(Alert.AlertType.WARNING, "Sikeres törlés", "");
+            } else {
+                alert(Alert.AlertType.WARNING, "Sikertelen törlés", "");
+            }
+            readFood();
+        } catch (SQLException e) {
+            sqlAlert(e);
+        }
     }
 
     @FXML
