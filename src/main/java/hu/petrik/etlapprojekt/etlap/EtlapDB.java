@@ -52,4 +52,37 @@ public class EtlapDB {
         stmt.setInt(1, id);
         return stmt.executeUpdate() > 0;
     }
+
+    public boolean updateFood(Etel food) throws SQLException {
+        String sql = "UPDATE etlap " +
+                "SET nev = ?, " +
+                "leiras = ?, " +
+                "ar = ?, " +
+                "kategoria = ?" +
+                "WHERE id = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, food.getName());
+        stmt.setString(2, food.getDesc());
+        stmt.setInt(3, food.getPrice());
+        stmt.setString(4, food.getCategory());
+        stmt.setInt(5, food.getId());
+        return stmt.executeUpdate() > 0;
+    }
+
+    public boolean updateAllFoodPrice(int changeVal, boolean szazalek) throws SQLException {
+        if (!szazalek) {
+            String sql = "UPDATE etlap " +
+                    "SET ar = ar + ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, changeVal);
+            return stmt.executeUpdate() > 0;
+        } else {
+            String sql = "UPDATE etlap " +
+                    "SET ar = ar * (1 + (? /100))";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, changeVal);
+            return stmt.executeUpdate() > 0;
+        }
+
+    }
 }

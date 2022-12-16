@@ -51,8 +51,8 @@ public class EtlapController {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-        szazalekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
-        forintSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2500));
+        szazalekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5, 5));
+        forintSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 3000, 50, 50));
         try {
             db = new EtlapDB();
             readFood();
@@ -88,6 +88,14 @@ public class EtlapController {
         int selectedIndex = etlapTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex == -1) {
             alert(Alert.AlertType.WARNING, "A táblázatból előbb válasszon ki egy ételt!", "");
+            return null;
+        }
+        return etlapTable.getSelectionModel().getSelectedItem();
+    }
+
+    private Etel getSelectedFoodNullNotMatter() {
+        int selectedIndex = etlapTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == -1) {
             return null;
         }
         return etlapTable.getSelectionModel().getSelectedItem();
@@ -142,12 +150,76 @@ public class EtlapController {
         }
     }
 
+    private void updateFood(int id, String name, String category, int price, String desc) {
+        Etel food = new Etel(id, name, category, price, desc);
+        try {
+            if (db.updateFood(food)) {
+                alert(Alert.AlertType.WARNING, "Sikeres módosítás", "");
+            } else {
+                alert(Alert.AlertType.WARNING, "Sikertelen módosítás", "");
+            }
+            resetSpinners();
+            readFood();
+        } catch (SQLException e) {
+            sqlAlert(e);
+        }
+    }
+
+    private void updateAllFood(int changeVal, boolean szazalek) {
+        try {
+            if (db.updateAllFoodPrice(changeVal, szazalek)) {
+                alert(Alert.AlertType.WARNING, "Sikeres módosítás", "");
+            } else {
+                alert(Alert.AlertType.WARNING, "Sikertelen módosítás", "");
+            }
+            resetSpinners();
+            readFood();
+        } catch (SQLException e) {
+            sqlAlert(e);
+        }
+    }
+
+    private void resetSpinners() {
+        szazalekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5, 5));
+        forintSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 3000, 50, 50));
+    }
+
     @FXML
     public void forintEmelesClick(ActionEvent actionEvent) {
+        Etel selected = getSelectedFoodNullNotMatter();
+        if (selected == null) {
+            Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy szerednéd növelni az összes étel árát " + forintSpinner.getValue() + " forinttal?", "");
+            if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
+                return;
+            }
+            //TODO módosítás össz
+            updateAllFood(forintSpinner.getValue(), false);
+        } else {
+            Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy szerednéd növelni a(z) " + selected.getName() + " árát " + forintSpinner.getValue() + " forinttal?", "");
+            if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
+                return;
+            }
+            updateFood(selected.getId(), selected.getName(), selected.getCategory(), selected.getPrice() + forintSpinner.getValue(), selected.getDesc());
+        }
     }
 
     @FXML
     public void szazalekEmelesClick(ActionEvent actionEvent) {
+        Etel selected = getSelectedFoodNullNotMatter();
+        if (selected == null) {
+            Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy szerednéd növelni az összes étel árát " + szazalekSpinner.getValue() + " százalékkal?", "");
+            if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
+                return;
+            }
+            updateAllFood(szazalekSpinner.getValue(), true);
+        } else {
+            Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy szerednéd növelni a(z) " + selected.getName() + " árát " + szazalekSpinner.getValue() + " százalékkal?", "");
+            if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
+                return;
+            }
+            int price = (int)(selected.getPrice() * (1 + ( (double)szazalekSpinner.getValue() / 100)));
+            updateFood(selected.getId(), selected.getName(), selected.getCategory(), price , selected.getDesc());
+        }
     }
 
 
