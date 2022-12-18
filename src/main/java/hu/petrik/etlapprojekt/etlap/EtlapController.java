@@ -141,6 +141,7 @@ public class EtlapController {
         try {
             if (db.deleteFood(selected.getId())) {
                 alert(Alert.AlertType.WARNING, "Sikeres törlés", "");
+                listview.getItems().clear();
             } else {
                 alert(Alert.AlertType.WARNING, "Sikertelen törlés", "");
             }
@@ -192,7 +193,6 @@ public class EtlapController {
             if (optionalButtonType.isEmpty() || !(optionalButtonType.get().equals(ButtonType.OK)) && !(optionalButtonType.get().equals(ButtonType.YES))) {
                 return;
             }
-            //TODO módosítás össz
             updateAllFood(forintSpinner.getValue(), false);
         } else {
             Optional<ButtonType> optionalButtonType = alert(Alert.AlertType.CONFIRMATION, "Biztos, hogy szerednéd növelni a(z) " + selected.getName() + " árát " + forintSpinner.getValue() + " forinttal?", "");

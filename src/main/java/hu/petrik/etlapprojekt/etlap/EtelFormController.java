@@ -18,11 +18,11 @@ public class EtelFormController {
     @FXML
     private TextField nameInput;
     @FXML
-    private TextField descInput;
+    private TextArea descInput;
     private EtlapDB db;
 
     public void initialize() {
-        priceSpinnerInput.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
+        priceSpinnerInput.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 10000,50,50));
         categoryComboInput.getItems().addAll("előétel", "főétel", "desszert");
         categoryComboInput.setValue("előétel");
         try {
@@ -31,7 +31,6 @@ public class EtelFormController {
             e.printStackTrace();
         }
     }
-
     @FXML
     public void submitClick(ActionEvent actionEvent) {
         String name = nameInput.getText().trim();

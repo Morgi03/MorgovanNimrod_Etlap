@@ -5,13 +5,14 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="321.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlapprojekt.etlap.EtelFormController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="321.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlapprojekt.etlap.EtelFormController">
    <children>
       <GridPane>
         <columnConstraints>
@@ -46,11 +47,11 @@
                   <Insets right="8.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="submit" mnemonicParsing="false" onAction="#submitClick" prefWidth="10000.0" text="Hozzáad" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-            <TextField fx:id="nameInput" GridPane.columnIndex="1" />
-            <TextField fx:id="descInput" minHeight="90.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Spinner fx:id="priceSpinnerInput" prefWidth="10000.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ComboBox fx:id="categoryComboInput" prefWidth="20000.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <TextField fx:id="nameInput" GridPane.columnIndex="1" promptText="Ide írja az étel nevét"/>
+             <TextArea fx:id="descInput" prefHeight="105.0" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Ide írja az étel leírását (lehet üres)"/>
+             <ComboBox fx:id="categoryComboInput" prefWidth="20000.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <Spinner fx:id="priceSpinnerInput" prefWidth="10000.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+             <Button fx:id="submit" mnemonicParsing="false" onAction="#submitClick" prefWidth="10000.0" text="Hozzáad" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </children>
